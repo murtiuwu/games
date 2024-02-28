@@ -1,12 +1,13 @@
 import random
-import time
 import copy
 import pygame
 
-'''запускайте этот код в таком состоянии чтобы посмотреть как он будет работать.
+'''
+запускайте этот код в таком состоянии чтобы посмотреть как он будет работать.
 я подписал комментариями все величины которые можно менять чтобы подстраивать поле 
 под себя. для генерации случайного поля по новой достаточно нажать любую кнопку на клавиатуре
-(например пробел) не закрывая окно с текущей генерацией'''
+(например пробел) не закрывая окно с текущей генерацией
+'''
 
 pygame.init()
 
@@ -70,7 +71,7 @@ pool[2][5] = '0'
 pool[2][6] = '0'
 pool[1][4] = '0'
 
-def play(end_condition, pool):
+def play(pool):
     block_size = 10 # это размер одной клетки (в пикселях)
     width = len(pool) * block_size
     height = len(pool[0]) * block_size
@@ -82,8 +83,10 @@ def play(end_condition, pool):
 
     GREEN = (0,255,0)
     BLACK = (0, 0, 0)
+    WHITE = (255,255,255)
+    EAZY_WHITE = (230,230,230)
 
-    while end_condition > 1:
+    while True:
         r = random.randrange(0, 256)
         g = random.randrange(0, 256)
         b = random.randrange(0, 256)
@@ -97,14 +100,13 @@ def play(end_condition, pool):
                     for i2 in range(len(pool[i1])):
                         if random.randrange(0, 2) == 0:
                             pool[i1][i2] = '0'
-                play(999999999, pool)
+                play(pool)
 
         pygame_scene.fill(BLACK)
         poll_res = []
         for i in pool:
             poll_res.append(copy.copy(i))
         cor_y = -1
-        end_condition -= 1
         for y in pool:
             cor_y += 1
             cor_x = -1
@@ -120,19 +122,19 @@ def play(end_condition, pool):
         for row in range(len(poll_res)):
             for column in range(len(poll_res[row])):
                 if poll_res[row][column] == '0':
-                    r = random.randrange(0, 256)
-                    g = random.randrange(0, 256)
-                    b = random.randrange(0, 256)
-                    RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
+                    # r = random.randrange(0, 256)
+                    # g = random.randrange(0, 256)
+                    # b = random.randrange(0, 256)
+                    # RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
                     # радужную расцветку всем клеткам, если вы хотите более спокойный цвет то закоментируйте эти четыре строки
                     # и замените переменную под       ЭТИМ           словом на "GREEN"
-                    pygame.draw.rect(pygame_scene, RAND_COLOR, (row*block_size, column*block_size, block_size, block_size))
+                    pygame.draw.rect(pygame_scene, EAZY_WHITE, (row*block_size, column*block_size, block_size, block_size))
         pygame.display.update()
 
 
         clock.tick(15)
 
 
-play(999999999999, pool)
+play(pool)
 pygame.quit()
 quit()
