@@ -86,21 +86,29 @@ def play(pool):
     WHITE = (255,255,255)
     EAZY_WHITE = (230,230,230)
 
+    pause = False
+
     while True:
-        r = random.randrange(0, 256)
-        g = random.randrange(0, 256)
-        b = random.randrange(0, 256)
+        # r = random.randrange(0, 256)
+        # g = random.randrange(0, 256)
+        # b = random.randrange(0, 256)
+
 
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    for i1 in range(len(pool)):
+                        for i2 in range(len(pool[i1])):
+                            if random.randrange(0, 2) == 0:
+                                pool[i1][i2] = '0'
+                    play(pool)
+                if event.key == pygame.K_SPACE:
+                    pause = True
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                for i1 in range(len(pool)):
-                    for i2 in range(len(pool[i1])):
-                        if random.randrange(0, 2) == 0:
-                            pool[i1][i2] = '0'
-                play(pool)
+
+
 
         pygame_scene.fill(BLACK)
         poll_res = []
@@ -117,6 +125,37 @@ def play(pool):
                 else:
                     poll_res[cor_y][cor_x] = life(pool, cor_x, cor_y)
         pool = []
+        while pause:
+            pygame_scene.fill(BLACK)
+            mouse_pos = pygame.mouse.get_pos()
+            hes_a_live = pygame.mouse.get_pressed()
+            if hes_a_live[0]:
+                x = int(mouse_pos[0] / block_size)
+                y = int(mouse_pos[1] / block_size)
+                poll_res[x][y] = '0'
+            elif hes_a_live[2]:
+                x = int(mouse_pos[0] / block_size)
+                y = int(mouse_pos[1] / block_size)
+                poll_res[x][y] = '.'
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        pause = False
+            for row in range(len(poll_res)):
+                for column in range(len(poll_res[row])):
+                    if poll_res[row][column] == '0':
+                        # r = random.randrange(0, 256)
+                        # g = random.randrange(0, 256)
+                        # b = random.randrange(0, 256)
+                        # RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
+                        # радужную расцветку всем клеткам, если вы хотите более спокойный цвет то закоментируйте эти четыре строки
+                        # и замените переменную под       ЭТИМ           словом на "GREEN"
+                        pygame.draw.rect(pygame_scene, EAZY_WHITE,
+                                         (row * block_size, column * block_size, block_size, block_size))
+            pygame.display.update()
         for i in poll_res:
             pool.append(copy.copy(i))
         for row in range(len(poll_res)):
@@ -128,8 +167,10 @@ def play(pool):
                     # RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
                     # радужную расцветку всем клеткам, если вы хотите более спокойный цвет то закоментируйте эти четыре строки
                     # и замените переменную под       ЭТИМ           словом на "GREEN"
-                    pygame.draw.rect(pygame_scene, EAZY_WHITE, (row*block_size, column*block_size, block_size, block_size))
+                    pygame.draw.rect(pygame_scene, EAZY_WHITE,
+                                     (row*block_size, column*block_size, block_size, block_size))
         pygame.display.update()
+
 
 
         clock.tick(15)
