@@ -93,7 +93,6 @@ def play(pool):
         # g = random.randrange(0, 256)
         # b = random.randrange(0, 256)
 
-
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
@@ -101,6 +100,10 @@ def play(pool):
                         for i2 in range(len(pool[i1])):
                             if random.randrange(0, 2) == 0:
                                 pool[i1][i2] = '0'
+                if event.key == pygame.K_d:
+                    for i1 in range(len(pool)):
+                        for i2 in range(len(pool[i1])):
+                            pool[i1][i2] = '.'
                     play(pool)
                 if event.key == pygame.K_SPACE:
                     pause = True
