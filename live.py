@@ -21,8 +21,11 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 EAZY_WHITE = (230, 230, 230)
+RED = (255,0,0)
+BLUE = (0,0,255)
 
 BG_COLOR = BLACK
+
 
 # block_size = 10 # это размер одной клетки (в пикселях)
 
@@ -99,12 +102,32 @@ def play(pool):
     width = len(pool) * block_size
     height = len(pool[0]) * block_size
 
+    red = 230
+    green = 230
+    blue = 230
+
+    BLOCK_COLOR = EAZY_WHITE
+
     # gun = pygame.image.load('/Users/timur/desktop/sprites/gun.jpg')
 
     clock = pygame.time.Clock()
 
     pygame_scene = pygame.display.set_mode((width, height))
     pygame.display.set_caption('live')
+
+    def message(message, *size):
+        give_me_save = text.render(message, False, WHITE)
+        pygame_scene.blit(give_me_save, size)
+
+    def color_is(color, old_color):
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_press = pygame.mouse.get_pressed()
+        if color.collidepoint(mouse_pos):
+            if mouse_press[0]:
+                res = int((mouse_pos[0] - 10) / 2)
+                return res
+        return old_color
+
 
     pause = False
     save = False
@@ -115,7 +138,7 @@ def play(pool):
 
     text = pygame.font.Font(None, 30)
 
-    give_me_save = text.render('введите номер файла сохранения', False, WHITE)
+
 
     while True:
         # r = random.randrange(0, 256)
@@ -162,13 +185,31 @@ def play(pool):
             pygame_scene.fill(BG_COLOR)
             mouse_pos = pygame.mouse.get_pos()
             hes_a_live = pygame.mouse.get_pressed()
-            pygame_scene.blit(gun, (100, 100))
+            # pygame_scene.blit(gun, (100, 100))
+
 
             while setting:
-                pass
+                pygame_scene.fill(BG_COLOR)
+
+                message("выберите подходящий цвет для клетки", 10,10)
+                red = color_is(pygame.draw.rect(pygame_scene, RED, (10, 40, 255*2, 20)), red)
+                green = color_is(pygame.draw.rect(pygame_scene, GREEN, (10, 40+30, 255*2, 20)), green)
+                blue = color_is(pygame.draw.rect(pygame_scene, BLUE, (10, 40+60, 255*2, 20)), blue)
+
+                BLOCK_COLOR = (red, green, blue)
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_o:
+                            setting = False
+                pygame.draw.rect(pygame_scene, BLOCK_COLOR, (10, 40 + 100, 30, 30))
+                pygame.display.update()
 
             while load:
-                pygame_scene.blit(give_me_save, (10, 10))
+                message('введите номер сохранения', 10, 10)
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -181,7 +222,7 @@ def play(pool):
 
 
             while save:
-                pygame_scene.blit(give_me_save, (10,10))
+                message('введите номер сохранения', 10, 10)
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -208,6 +249,8 @@ def play(pool):
                     pygame.quit()
                     quit()
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_o:
+                        setting = True
                     if event.key == pygame.K_l:
                         load = True
                     if event.key == pygame.K_s:
@@ -224,7 +267,7 @@ def play(pool):
                         # RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
                         # радужную расцветку всем клеткам, если вы хотите более спокойный цвет то закоментируйте эти четыре строки
                         # и замените переменную под       ЭТИМ           словом на "GREEN"
-                        pygame.draw.rect(pygame_scene, EAZY_WHITE,
+                        pygame.draw.rect(pygame_scene, BLOCK_COLOR,
                                          (row * block_size, column * block_size, block_size, block_size))
             pygame.display.update()
 
@@ -240,7 +283,7 @@ def play(pool):
                     # RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
                     # радужную расцветку всем клеткам, если вы хотите более спокойный цвет то закоментируйте эти четыре строки
                     # и замените переменную под       ЭТИМ           словом на "GREEN"
-                    pygame.draw.rect(pygame_scene, EAZY_WHITE,
+                    pygame.draw.rect(pygame_scene, BLOCK_COLOR,
                                      (row*block_size, column*block_size, block_size, block_size))
         pygame.display.update()
 
