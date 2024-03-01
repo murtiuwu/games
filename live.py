@@ -15,6 +15,8 @@ l (во время режима строительства) - загружает
 во время режима строительства 
 ЛКМ - поставить клетку
 ПКМ - удалить клетку
+
+O (во время режима строительства) - включает настройки
 '''
 
 BLACK = (0, 0, 0)
@@ -128,7 +130,7 @@ def play(pool):
                 return res
         return old_color
 
-
+    RAINBOW_MOD_AOAOAOAOA = False
     pause = False
     save = False
     load = False
@@ -191,7 +193,7 @@ def play(pool):
             while setting:
                 pygame_scene.fill(BG_COLOR)
 
-                message("выберите подходящий цвет для клетки", 10,10)
+                message("выберите подходящий цвет для клетки, или нажмите на 'R' чтоб включить РАДУЖНЫЙ МОД", 10,10)
                 red = color_is(pygame.draw.rect(pygame_scene, RED, (10, 40, 255*2, 20)), red)
                 green = color_is(pygame.draw.rect(pygame_scene, GREEN, (10, 40+30, 255*2, 20)), green)
                 blue = color_is(pygame.draw.rect(pygame_scene, BLUE, (10, 40+60, 255*2, 20)), blue)
@@ -203,6 +205,8 @@ def play(pool):
                         pygame.quit()
                         quit()
                     if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_r:
+                            RAINBOW_MOD_AOAOAOAOA = not RAINBOW_MOD_AOAOAOAOA
                         if event.key == pygame.K_o:
                             setting = False
                 pygame.draw.rect(pygame_scene, BLOCK_COLOR, (10, 40 + 100, 30, 30))
@@ -277,12 +281,11 @@ def play(pool):
         for row in range(len(poll_res)):
             for column in range(len(poll_res[row])):
                 if poll_res[row][column] == '0':
-                    # r = random.randrange(0, 256)
-                    # g = random.randrange(0, 256)
-                    # b = random.randrange(0, 256)
-                    # RAND_COLOR = (r, g, b) # эта переменная в комбинации с предыдущими тремя задает психоделическую
-                    # радужную расцветку всем клеткам, если вы хотите более спокойный цвет то закоментируйте эти четыре строки
-                    # и замените переменную под       ЭТИМ           словом на "GREEN"
+                    if RAINBOW_MOD_AOAOAOAOA:
+                        r = random.randrange(0, 256)
+                        g = random.randrange(0, 256)
+                        b = random.randrange(0, 256)
+                        BLOCK_COLOR = (r, g, b)
                     pygame.draw.rect(pygame_scene, BLOCK_COLOR,
                                      (row*block_size, column*block_size, block_size, block_size))
         pygame.display.update()
