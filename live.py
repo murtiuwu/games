@@ -99,7 +99,7 @@ def play(pool):
     width = len(pool) * block_size
     height = len(pool[0]) * block_size
 
-    gun = pygame.image.load('/Users/timur/desktop/sprites/gun.jpg')
+    # gun = pygame.image.load('/Users/timur/desktop/sprites/gun.jpg')
 
     clock = pygame.time.Clock()
 
@@ -109,6 +109,7 @@ def play(pool):
     pause = False
     save = False
     load = False
+    setting = False
 
     in_del, out_del = "", ""
 
@@ -162,6 +163,9 @@ def play(pool):
             mouse_pos = pygame.mouse.get_pos()
             hes_a_live = pygame.mouse.get_pressed()
             pygame_scene.blit(gun, (100, 100))
+
+            while setting:
+                pass
 
             while load:
                 pygame_scene.blit(give_me_save, (10, 10))
